@@ -24,11 +24,11 @@ jobs:
           
       # 2. Construir y Subir la imagen (Build & Push)
       - name: Construir y Subir la imagen Docker
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: iratxurrutia/as-laboratorio-8-web:latest # Imagen final
+          tags: iratxurrutia/as-laboratorio-8-web # Imagen final
       
       # 3. Autenticación en Google Cloud (Usando OIDC)
       - name: Autenticación en Google Cloud
