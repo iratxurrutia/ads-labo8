@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: iratxurrutia/as-laboratorio-8-web:latest
+        env:
+        - name: FLASK_APP
+          value: app.py
+        - name: FLASK_RUN_HOST
+          value: 0.0.0.0
+        ports:
+        - containerPort: 5000 #Flask escucha en el puerto 5000 (desde mi Dockerfile)
+        
+        #Parche para el Lab 8 (para forzar la actualización con CI/CD)
+        imagePullPolicy: Always

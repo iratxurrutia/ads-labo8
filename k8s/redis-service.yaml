@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis #Nombre Clave Debe coincidir con 'host=' de app.py
+spec:
+  type: ClusterIP #Interno: solo accesible DENTRO de Kubernetes
+  selector:
+    app: redis #Busca los contenedores con la etiqueta 'app: redis'
+  ports:
+    - port: 6379      #Puerto que expone el Service (el de tu app)
+      targetPort: 6379 #Puerto al que va el tráfico dentro del contenedor
