@@ -1,0 +1,54 @@
+name: Despliegue CI/CD a GKE
+
+on:
+  push:
+    branches: [ "main" ] # Se dispara al subir código a la rama 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # ¡Obligatorio para la autenticación en Google Cloud!
+
+    steps:
+      - name: Bajar codigo
+        uses: actions/checkout@v5 # Versión moderna
+
+      # 1. Configuración de Docker Hub
+      - name: Login en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      # 2. Construir y Subir la imagen (Build & Push)
+      - name: Construir y Subir la imagen Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: iratxurrutia/as-laboratorio-8-web:latest # Imagen final
+      
+      # 3. Autenticación en Google Cloud (Usando OIDC)
+      - name: Autenticación en Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ads2526
+          workload_identity_provider: projects/390131732323/locations/global/workloadIdentityPools/grupo-labo8/providers/github-actions-provider # El string projects/...
+          service_account: cuentadeservicio-labo8@ads2526.iam.gserviceaccount.com # El email de la cuenta de servicio
+
+      # 4. Configurar Kubectl (Conectar a GKE)
+      - name: Obtener credenciales de GKE
+        uses: google-github-actions/get-gke-credentials@v3
+        with:
+          cluster_name: cluster-labo8
+          location: us-central1
+
+      # 5. Desplegar los objetos Kubernetes
+      - name: Desplegar objetos Kubernetes
+        run: kubectl apply -f k8s/
+
+      # 6. Forzar el reinicio para que se cargue la nueva imagen
+      - name: Forzar reinicio de Deployment (CD)
+        run: kubectl rollout restart deployment web-deployment
