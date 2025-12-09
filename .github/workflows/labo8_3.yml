@@ -13,7 +13,7 @@ jobs:
     steps:
       # 1) Descargar el código
       - name: Bajar codigo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2) Realizar pruebas de código (Linter)
       - name: Correr Pylint (Revisor de calidad)
