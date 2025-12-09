@@ -1,0 +1,23 @@
+name: Análisis de Calidad (Linter)
+
+on:
+  push:
+    branches-ignore: [ "main" ] # Se dispara en cualquier rama MENOS main
+
+jobs:
+  linter-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # Permiso para subir el reporte de fallos
+    
+    steps:
+      # 1) Descargar el código
+      - name: Bajar codigo
+        uses: actions/checkout@v5
+
+      # 2) Realizar pruebas de código (Linter)
+      - name: Correr Pylint (Revisor de calidad)
+        uses: advanced-security/python-lint-code-scanning-action@v1
+        with:
+          linter: pylint
