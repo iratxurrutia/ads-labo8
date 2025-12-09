@@ -8,7 +8,6 @@ jobs:
   linter-check:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       security-events: write # Permiso para subir el reporte de fallos
     
     steps:
