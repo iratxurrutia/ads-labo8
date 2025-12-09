@@ -19,5 +19,6 @@ def get_hit_count():
 
 @app.route('/')
 def hello():
+    """Esta función devuelve el saludo y el contador"""
     count = get_hit_count()
-    return 'Nueva característica ¡Saludos desde CI/CD! Este sitio se ha visitado {} veces.\n'.format(count)
+    return f'New feature ¡Saludos desde CI/CD! Este sitio se ha visitado {count} veces.\n'
